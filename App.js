@@ -7,7 +7,8 @@ import * as NavigationBar from 'expo-navigation-bar';
 import RootNavigator from './src/navigation/RootNavigator';
 
 const loadAssets = async () => {
-    await Font.loadAsync({ "poppins-regular": require("./assets/fonts/Poppins-Regular.ttf") });
+    await Font.loadAsync({ "poppins-medium": require("./assets/fonts/Poppins-Medium.ttf") });
+    await Font.loadAsync({ "poppins-bold": require("./assets/fonts/Poppins-Bold.ttf") });
     await NavigationBar.setBackgroundColorAsync("#333");
     await NavigationBar.setButtonStyleAsync("light");
 }

@@ -13,7 +13,7 @@ export default function AuthStack({ navigation }) {
             screenOptions={{
                 headerRight: () => <View><Feather name="menu" size={24} color="white" onPress={() => navigation.toggleDrawer()} /></View>,
                 headerTitleStyle: { color: "#fff" },
-                headerStyle: { backgroundColor: "#333" },
+                headerStyle: { backgroundColor: "#333", fontFamily: "poppins-bold" },
                 headerTintColor: "#fff",
                 animation: "none"
             }} >

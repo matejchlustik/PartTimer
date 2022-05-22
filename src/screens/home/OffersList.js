@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, FlatList, StyleSheet, TouchableHighlight } from 'react-native'
+import { StatusBar } from "expo-status-bar";
 
 import { getSearchOffers } from '../../api/OfferRequests';
 import AppText from '../../components/AppText';
+import OfferCard from '../../components/OfferCard';
 import { globalStyles } from '../../styles/Global'
 
 export default function OffersList({ route, navigation }) {
@@ -12,7 +14,7 @@ export default function OffersList({ route, navigation }) {
 
     useEffect(() => {
         const controller = new AbortController();
-        async function fetchOffer() {
+        async function fetchOffers() {
             const data = await getSearchOffers(searchQuery);
             if (data.message) {
                 console.log(data.message, "OffersListScreen 11-24");
@@ -21,24 +23,26 @@ export default function OffersList({ route, navigation }) {
                 setOffers(data);
             }
         }
-        fetchOffer();
+        fetchOffers();
         return () => controller.abort();
     }, [searchQuery])
 
-    //TODO: style this better
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity onPress={() => navigation.navigate("OfferDetails", { id: item._id })} style={styles.offerCardContainer}>
-            <View style={styles.offerCard}>
-                <AppText>{item.title}</AppText>
-                <AppText>{item.company}</AppText>
-                <AppText>{item.pay}</AppText>
-            </View>
-        </TouchableOpacity>
+        <TouchableHighlight underlayColor={"#e6d260"} onPress={() => navigation.navigate("OfferDetails", { id: item._id })} activeOpacity={0.4}>
+            <OfferCard>
+                <View style={styles.offersTitleContainer}>
+                    <AppText style={styles.offersTitleText}>{item.title}</AppText>
+                    <AppText style={globalStyles.text}>{item.pay}$</AppText>
+                </View>
+                <AppText style={globalStyles.text}>{item.description.substring(0, 30)}</AppText>
+            </OfferCard>
+        </TouchableHighlight>
     )
 
     return (
-        <View style={globalStyles.container}>
+        <View style={styles.offersContainer}>
+            <StatusBar style="light" />
             {offers ?
                 <FlatList
                     data={offers}
@@ -50,19 +54,20 @@ export default function OffersList({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    offerCard: {
-        paddingVertical: 8,
-        paddingHorizontal: 8,
-        marginHorizontal: 10,
-        marginVertical: 10,
+    offersContainer: {
+        flex: 1,
+        backgroundColor: "#feda47"
     },
-    offerCardContainer: {
-        backgroundColor: "#f6b30a",
-        borderRadius: 12,
-        marginHorizontal: 18,
-        marginVertical: 10,
-        shadowColor: "black",
-        elevation: 8,
+    offersTitleText: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#172b6b",
+    },
+    offersTitleContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        marginVertical: 10
     }
 })
 

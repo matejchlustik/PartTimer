@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ScrollView } from 'react-native'
+import { useCallback, useEffect, useState } from 'react';
+import { View, StyleSheet, ScrollView, BackHandler } from 'react-native'
+import { StatusBar } from "expo-status-bar";
+import { useFocusEffect } from '@react-navigation/native';
 
 import AppText from '../../components/AppText';
+import AppTextBold from '../../components/AppTextBold';
 import { globalStyles } from '../../styles/Global'
 
 export default function OfferDetails({ route, navigation }) {
 
-    const { id } = route.params;
+    const { id, fromMyProfile } = route.params;
 
     const [offer, setOffer] = useState();
 
@@ -31,15 +34,32 @@ export default function OfferDetails({ route, navigation }) {
         return () => controller.abort();
     }, [id])
 
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (fromMyProfile) {
+                    navigation.navigate("My Profile");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () =>
+                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        }, [fromMyProfile])
+    )
 
     return (
         <ScrollView style={globalStyles.container}>
+            <StatusBar style="light" />
             {offer ?
                 <View>
                     <View style={styles.titleTextContainer}>
-                        <AppText style={styles.titleText}>{offer.title}</AppText>
+                        <AppTextBold style={globalStyles.titleText}>{offer.title}</AppTextBold>
                     </View>
-                    <AppText>{offer.description}</AppText>
+                    <AppText style={globalStyles.text}>{offer.description}</AppText>
                 </View>
                 : null}
         </ScrollView>
@@ -55,10 +75,7 @@ const styles = StyleSheet.create({
     titleTextContainer: {
         paddingBottom: 8,
         marginBottom: 20,
-        borderBottomWidth: 1
-    },
-    titleText: {
-        fontSize: 24,
-        fontWeight: "bold",
+        borderBottomWidth: 1,
+        borderBottomColor: "#172b6b"
     }
 })

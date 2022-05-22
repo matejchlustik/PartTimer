@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import * as SecureStore from 'expo-secure-store';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { StatusBar } from "expo-status-bar";
 
 import AppText from '../../components/AppText'
 import { globalStyles } from '../../styles/Global'
@@ -45,6 +46,7 @@ export default function Login({ navigation }) {
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                 <KeyboardAwareScrollView style={globalStyles.formContainer} keyboardShouldPersistTaps={'handled'}>
+                    <StatusBar style="light" />
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View >
                             <AppText style={globalStyles.formLabel}>Email</AppText>

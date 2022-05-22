@@ -1,10 +1,12 @@
 import { View, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 import { useState } from 'react'
+import { StatusBar } from "expo-status-bar";
 
 import { getSearchOffers } from '../../api/OfferRequests';
 import AppText from '../../components/AppText';
 import { globalStyles } from '../../styles/Global'
+import AppTextBold from '../../components/AppTextBold';
 
 
 export default function Home({ navigation }) {
@@ -45,8 +47,9 @@ export default function Home({ navigation }) {
 
     return (
         <View style={globalStyles.container}>
+            <StatusBar style="light" />
             <View style={styles.innerContainer}>
-                <AppText style={styles.welcomeText}>Welcome</AppText>
+                <AppTextBold style={{ ...globalStyles.titleText, ...styles.welcomeText }}>Welcome</AppTextBold>
                 <SearchBar
                     placeholder='Search'
                     onChangeText={onChangeText}
@@ -97,14 +100,11 @@ const styles = StyleSheet.create({
     },
     searchBarInput: {
         color: "#fff",
-        fontFamily: "poppins-regular",
+        fontFamily: "poppins-medium",
         top: 2
     },
     welcomeText: {
         padding: 10,
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "#2e2e2e",
         textAlign: "center"
     }
 

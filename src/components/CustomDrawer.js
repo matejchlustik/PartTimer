@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     bottomBarText: {
         color: "#fff",
         fontSize: 16,
-        fontFamily: "poppins-regular",
+        fontFamily: "poppins-medium",
         top: 2
     },
     bottomBarTouchOpacity: {

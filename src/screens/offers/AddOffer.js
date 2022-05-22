@@ -1,6 +1,7 @@
 import { View, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Formik } from 'formik';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { StatusBar } from "expo-status-bar";
 
 import AppText from '../../components/AppText';
 import { globalStyles } from '../../styles/Global';
@@ -47,6 +48,7 @@ export default function AddOffer({ navigation }) {
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                 <KeyboardAwareScrollView style={globalStyles.formContainer} keyboardShouldPersistTaps={'handled'}>
+                    <StatusBar style="light" />
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View>
                             <AppText style={globalStyles.formLabel}>Title</AppText>

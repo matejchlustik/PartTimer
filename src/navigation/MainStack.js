@@ -14,7 +14,7 @@ export default function MainStack({ navigation }) {
             initialRouteName='Home'
             screenOptions={{
                 headerRight: () => <View><Feather name="menu" size={24} color="white" onPress={() => navigation.toggleDrawer()} /></View>,
-                headerTitleStyle: { color: "#fff" },
+                headerTitleStyle: { color: "#fff", fontFamily: "poppins-bold" },
                 headerStyle: { backgroundColor: "#333" },
                 headerTintColor: "#fff",
                 animation: "none"

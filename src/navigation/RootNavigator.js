@@ -4,15 +4,15 @@ import * as SecureStore from 'expo-secure-store';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { View } from "react-native";
 import { Feather } from '@expo/vector-icons';
-import { DrawerActions } from '@react-navigation/native';
+import { StatusBar } from "expo-status-bar";
 
 import { UserContext } from "../contexts/UserContext"
 import TestScreen from "../screens/TestScreen";
 import MainStack from "./MainStack";
 import AuthStack from "./AuthStack";
 import CustomDrawer from "../components/CustomDrawer"
-import { StatusBar } from "expo-status-bar";
 import AddOffer from "../screens/offers/AddOffer";
+import MyProfile from "../screens/profile/MyProfile";
 
 
 const Drawer = createDrawerNavigator();
@@ -20,7 +20,6 @@ const Drawer = createDrawerNavigator();
 export default function RootNavigator() {
 
     const [user, setUser] = useState();
-
 
     useEffect(() => {
         async function getValueFor(key) {
@@ -43,12 +42,12 @@ export default function RootNavigator() {
                     screenOptions={({ navigation }) => ({
                         drawerPosition: "right",
                         drawerInactiveTintColor: "#fff",
-                        drawerActiveBackgroundColor: "#ffea63",
-                        drawerActiveTintColor: "#2e2e2e",
-                        drawerLabelStyle: { fontSize: 16, fontFamily: "poppins-regular", top: 2 },
+                        drawerActiveBackgroundColor: "#feda47",
+                        drawerActiveTintColor: "#172b6b",
+                        drawerLabelStyle: { fontSize: 16, fontFamily: "poppins-medium", top: 2 },
                         headerRight: () => <View style={{ marginHorizontal: 15 }}><Feather name="menu" size={24} color="white" onPress={() => navigation.toggleDrawer()} /></View>,
                         headerLeft: () => null,
-                        headerTitleStyle: { color: "#fff" },
+                        headerTitleStyle: { color: "#fff", fontFamily: "poppins-bold" },
                         headerStyle: { backgroundColor: "#333" },
                         headerTintColor: "#fff",
                         animation: "none",
@@ -58,7 +57,16 @@ export default function RootNavigator() {
                     <Drawer.Screen navigationKey={user ? 'user' : 'guest'} name={"HomeStack"} component={MainStack} options={{ headerShown: false, drawerItemStyle: { marginTop: 30 } }} />
                     {user ? (
                         <>
-                            <Drawer.Screen name={"AddOffer"} component={AddOffer} />
+                            <Drawer.Screen name={"Add Offer"} component={AddOffer} />
+                            <Drawer.Screen
+                                name={"My Profile"}
+                                component={MyProfile}
+                                options={({ navigation }) => ({
+                                    headerStyle: { backgroundColor: "#feda47" },
+                                    headerTitleStyle: { color: "#172b6b", fontFamily: "poppins-bold" },
+                                    headerRight: () => <View style={{ marginHorizontal: 15 }}><Feather name="menu" size={24} color="#172b6b" onPress={() => navigation.toggleDrawer()} /></View>,
+                                })}
+                            />
                         </>
                     ) :
                         <>
