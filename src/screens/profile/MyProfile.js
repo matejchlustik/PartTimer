@@ -1,6 +1,8 @@
-import { View, StyleSheet, FlatList, TouchableHighlight } from 'react-native'
+import { View, StyleSheet, FlatList, TouchableHighlight, BackHandler } from 'react-native'
 import { StatusBar } from "expo-status-bar";
 import { useIsFocused } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 import AppText from '../../components/AppText';
 import { globalStyles } from '../../styles/Global'
@@ -8,12 +10,35 @@ import useFetch from '../../hooks/useFetch';
 import OfferCard from '../../components/OfferCard';
 import AppTextBold from '../../components/AppTextBold';
 
-export default function MyProfile({ navigation }) {
+export default function MyProfile({ route, navigation }) {
+    //TODO: ADD SPLASH SCREEN IF LOADING, ERRORS, etc.
 
     const { data: offers, isPending: offersPending, error: offersError } = useFetch("http:/192.168.1.14:8000/api/offers/me");
     const { data: user, isPending: userPending, error: userError } = useFetch("http:/192.168.1.14:8000/api/users/me");
 
+    let fromOfferDetails;
+    if (route.params) {
+        fromOfferDetails = route.params.fromOfferDetails;
+    }
+
     const isFocused = useIsFocused()
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (fromOfferDetails) {
+                    navigation.navigate("Home");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () =>
+                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        }, [fromOfferDetails])
+    )
 
     const ListHeaderComponent = () => (
         <View>

@@ -38,7 +38,7 @@ export default function OfferDetails({ route, navigation }) {
         useCallback(() => {
             const onBackPress = () => {
                 if (fromMyProfile) {
-                    navigation.navigate("My Profile");
+                    navigation.navigate("My Profile", { fromOfferDetails: true });
                     return true;
                 } else {
                     return false;
