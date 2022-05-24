@@ -2,7 +2,7 @@ import { View, StyleSheet, FlatList, TouchableHighlight, BackHandler } from 'rea
 import { StatusBar } from "expo-status-bar";
 import { useIsFocused } from '@react-navigation/native'
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 
 import AppText from '../../components/AppText';
 import { globalStyles } from '../../styles/Global'
@@ -15,29 +15,36 @@ export default function MyProfile({ route, navigation }) {
 
     const { data: offers, isPending: offersPending, error: offersError } = useFetch("http:/192.168.1.14:8000/api/offers/me");
     const { data: user, isPending: userPending, error: userError } = useFetch("http:/192.168.1.14:8000/api/users/me");
-
-    let fromOfferDetails;
-    if (route.params) {
-        fromOfferDetails = route.params.fromOfferDetails;
-    }
+    const flatListRef = useRef();
 
     const isFocused = useIsFocused()
+
+    const { fromOfferDetails } = route.params;
+    console.log(fromOfferDetails);
+
+    useEffect(() => {
+        if (!fromOfferDetails && flatListRef.current) {
+            flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
+        }
+    }, [fromOfferDetails])
 
     useFocusEffect(
         useCallback(() => {
             const onBackPress = () => {
-                if (fromOfferDetails) {
-                    navigation.navigate("Home");
-                    return true;
-                } else {
-                    return false;
-                }
+                navigation.navigate("Home");
+                return true;
             }
             BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-            return () =>
+            const cleanup = () => {
                 BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-        }, [fromOfferDetails])
+                navigation.setParams({
+                    fromOfferDetails: false
+                });
+            }
+            return () =>
+                cleanup();
+        }, [isFocused])
     )
 
     const ListHeaderComponent = () => (
@@ -62,6 +69,7 @@ export default function MyProfile({ route, navigation }) {
             <View style={styles.offersContainer}>
                 {offers ?
                     <FlatList
+                        ref={flatListRef}
                         ListHeaderComponent={ListHeaderComponent}
                         data={offers}
                         renderItem={({ item }) => (

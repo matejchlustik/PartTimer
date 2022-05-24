@@ -66,6 +66,7 @@ export default function RootNavigator() {
                                     headerTitleStyle: { color: "#172b6b", fontFamily: "poppins-bold" },
                                     headerRight: () => <View style={{ marginHorizontal: 15 }}><Feather name="menu" size={24} color="#172b6b" onPress={() => navigation.toggleDrawer()} /></View>,
                                 })}
+                                initialParams={{ fromOfferDetails: false }}
                             />
                         </>
                     ) :
