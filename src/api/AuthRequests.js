@@ -18,7 +18,6 @@ export const registerUser = async values => {
 }
 
 export const loginUser = async values => {
-    const { email, password } = values;
 
     try {
         const res = await fetch(`http:/192.168.1.14:8000/api/users/login`,

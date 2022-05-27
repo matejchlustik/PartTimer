@@ -11,16 +11,16 @@ import OfferCard from '../../components/OfferCard';
 import AppTextBold from '../../components/AppTextBold';
 
 export default function MyProfile({ route, navigation }) {
-    //TODO: ADD SPLASH SCREEN IF LOADING, ERRORS, etc.
+    // TODO: figure out what to do if errors
 
     const { data: offers, isPending: offersPending, error: offersError } = useFetch("http:/192.168.1.14:8000/api/offers/me");
     const { data: user, isPending: userPending, error: userError } = useFetch("http:/192.168.1.14:8000/api/users/me");
+
     const flatListRef = useRef();
 
     const isFocused = useIsFocused()
 
     const { fromOfferDetails } = route.params;
-    console.log(fromOfferDetails);
 
     useEffect(() => {
         if (!fromOfferDetails && flatListRef.current) {
@@ -42,20 +42,17 @@ export default function MyProfile({ route, navigation }) {
                     fromOfferDetails: false
                 });
             }
-            return () =>
-                cleanup();
-        }, [isFocused])
+            return () => cleanup();
+        }, [])
     )
 
     const ListHeaderComponent = () => (
         <View>
             <View style={styles.userContainer}>
-                {user ?
-                    <View style={styles.userInnerContainer}>
-                        <AppTextBold style={{ ...globalStyles.titleText, marginVertical: 8, }}>{user.name}</AppTextBold>
-                        <AppText style={globalStyles.text}>{user.email}</AppText>
-                    </View>
-                    : null}
+                <View style={styles.userInnerContainer}>
+                    <AppTextBold style={{ ...globalStyles.titleText, marginVertical: 8, }}>{user.name}</AppTextBold>
+                    <AppText style={globalStyles.text}>{user.email}</AppText>
+                </View>
             </View>
             <AppTextBold style={{ ...styles.offersTitleText, paddingHorizontal: 18, marginVertical: 18, fontSize: 24 }}>Active Offers</AppTextBold>
         </View>
@@ -67,7 +64,7 @@ export default function MyProfile({ route, navigation }) {
                 <StatusBar style="dark" />
                 : null}
             <View style={styles.offersContainer}>
-                {offers ?
+                {offers && user ?
                     <FlatList
                         ref={flatListRef}
                         ListHeaderComponent={ListHeaderComponent}

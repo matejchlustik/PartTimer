@@ -1,9 +1,11 @@
-import { View, Text } from 'react-native'
+import { Text, View } from 'react-native';
 
 export default function TestScreen() {
+
     return (
         <View>
-            <Text>TestScreen</Text>
+            <Text>abc</Text>
         </View>
     )
+
 }

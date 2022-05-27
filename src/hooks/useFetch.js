@@ -6,8 +6,6 @@ const useFetch = (url, ...args) => {
     const [isPending, setIsPending] = useState(true);
     const [error, setError] = useState(null);
 
-
-
     useEffect(() => {
         const controller = new AbortController();
         async function fetchData() {

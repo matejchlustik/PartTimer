@@ -17,7 +17,7 @@ import MyProfile from "../screens/profile/MyProfile";
 
 const Drawer = createDrawerNavigator();
 
-export default function RootNavigator() {
+export default function RootNavigator({ onAppReady }) {
 
     const [user, setUser] = useState();
 
@@ -36,7 +36,7 @@ export default function RootNavigator() {
     return (
         <UserContext.Provider value={{ user, setUser }}>
             <StatusBar style="light" />
-            <NavigationContainer>
+            <NavigationContainer onReady={onAppReady}>
                 <Drawer.Navigator
                     initialRouteName="HomeStack"
                     screenOptions={({ navigation }) => ({
