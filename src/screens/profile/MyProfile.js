@@ -3,18 +3,22 @@ import { StatusBar } from "expo-status-bar";
 import { useIsFocused } from '@react-navigation/native'
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useRef, useEffect } from 'react';
+import ContentLoader from "react-native-easy-content-loader";
+
 
 import AppText from '../../components/AppText';
 import { globalStyles } from '../../styles/Global'
 import useFetch from '../../hooks/useFetch';
 import OfferCard from '../../components/OfferCard';
 import AppTextBold from '../../components/AppTextBold';
+import DotMenu from '../../components/DotMenu';
 
 export default function MyProfile({ route, navigation }) {
     // TODO: figure out what to do if errors
+    // TODO: if offer is added or edited make this refresh or refetch or whatever
 
-    const { data: offers, isPending: offersPending, error: offersError } = useFetch("http:/192.168.1.14:8000/api/offers/me");
-    const { data: user, isPending: userPending, error: userError } = useFetch("http:/192.168.1.14:8000/api/users/me");
+    const { data: offers, isPending: offersPending, error: offersError } = useFetch("http:/192.168.1.17:8000/api/offers/me");
+    const { data: user, isPending: userPending, error: userError } = useFetch("http:/192.168.1.17:8000/api/users/me");
 
     const flatListRef = useRef();
 
@@ -28,7 +32,7 @@ export default function MyProfile({ route, navigation }) {
         }
     }, [fromOfferDetails])
 
-    useFocusEffect(
+    /*useFocusEffect(
         useCallback(() => {
             const onBackPress = () => {
                 navigation.navigate("Home");
@@ -44,7 +48,7 @@ export default function MyProfile({ route, navigation }) {
             }
             return () => cleanup();
         }, [])
-    )
+    )*/
 
     const ListHeaderComponent = () => (
         <View>
@@ -58,40 +62,56 @@ export default function MyProfile({ route, navigation }) {
         </View>
     )
 
-    return (
+    const Loader = () => (
+        <View style={{ backgroundColor: "#feda47", flex: 1 }}>
+            {isFocused ?
+                <StatusBar style="dark" />
+                : null}
+            <View style={{ padding: 18, paddingHorizontal: 8 }}>
+                <ContentLoader containerStyles={styles.userInnerContainer} titleStyles={{ height: 25, marginVertical: 8, }} primaryColor='#172b6b' pRows={1} pWidth={["75%"]} />
+            </View>
+            <View style={{ backgroundColor: "#333", flex: 1, paddingHorizontal: 8 }}>
+                <ContentLoader containerStyles={{ marginVertical: 18 }} titleStyles={{ height: 25, width: "75%", marginVertical: 10, }} primaryColor='#DCDCDC' pRows={0} />
+                <ContentLoader containerStyles={{ marginVertical: 8 }} primaryColor='#DCDCDC' pRows={2} listSize={5} />
+            </View>
+        </View>
+    )
+
+    return (!offersPending && !userPending ?
         <View style={{ flex: 1, backgroundColor: "#feda47" }}>
             {isFocused ?
                 <StatusBar style="dark" />
                 : null}
             <View style={styles.offersContainer}>
-                {offers && user ?
-                    <FlatList
-                        ref={flatListRef}
-                        ListHeaderComponent={ListHeaderComponent}
-                        data={offers}
-                        renderItem={({ item }) => (
-                            <TouchableHighlight underlayColor={"#8a8888"} onPress={() => navigation.navigate("OfferDetails", { id: item._id, fromMyProfile: true })} activeOpacity={0.4}>
-                                <OfferCard>
-                                    <View style={styles.offersTitleContainer}>
-                                        <AppTextBold style={styles.offersTitleText}>{item.title}</AppTextBold>
-                                        <AppText style={styles.offersText}>{item.pay}$</AppText>
-                                    </View>
-                                    <AppText style={styles.offersText}>{item.description.substring(0, 30)}</AppText>
-                                </OfferCard>
-                            </TouchableHighlight>
-                        )}
-                        keyExtractor={item => item._id}
-                    />
-                    : null}
+                <FlatList
+                    ref={flatListRef}
+                    ListHeaderComponent={ListHeaderComponent}
+                    data={offers}
+                    renderItem={({ item }) => (
+                        <TouchableHighlight underlayColor={"#8a8888"} onPress={() => navigation.navigate("OfferDetails", { id: item._id, fromMyProfile: true })} activeOpacity={0.4}>
+                            <OfferCard>
+                                <View style={styles.offersTitleContainer}>
+                                    <AppTextBold style={styles.offersTitleText}>{item.title}</AppTextBold>
+                                    <AppText style={styles.offersText}>{item.pay}€</AppText>
+                                </View>
+                                <View style={styles.offersDescriptionContainer}>
+                                    <AppText style={{ ...styles.offersText, flexBasis: "75%" }}>{item.description.substring(0, 70)}</AppText>
+                                    <DotMenu navigation={navigation} listItem={item} />
+                                </View>
+                            </OfferCard>
+                        </TouchableHighlight>
+                    )}
+                    keyExtractor={item => item._id}
+                />
             </View>
         </View>
-    )
+        : <Loader />)
 }
 
 const styles = StyleSheet.create({
     userInnerContainer: {
         paddingBottom: 8,
-        marginVertical: 20,
+        marginVertical: 16,
     },
     userContainer: {
         padding: 18,
@@ -104,6 +124,7 @@ const styles = StyleSheet.create({
     offersTitleText: {
         fontSize: 18,
         color: "#fff",
+        flexBasis: "75%"
     },
     offersText: {
         fontSize: 16,
@@ -112,7 +133,13 @@ const styles = StyleSheet.create({
     offersTitleContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "flex-end",
+        alignItems: "center",
         marginVertical: 10
     },
+    offersDescriptionContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+    }
+
 })

@@ -17,7 +17,7 @@ export default function OfferDetails({ route, navigation }) {
         const controller = new AbortController();
         async function fetchOffer() {
             try {
-                const res = await fetch(`http:/192.168.1.14:8000/api/offers/${id}`,
+                const res = await fetch(`http:/192.168.1.17:8000/api/offers/${id}`,
                     {
                         method: "GET",
                         signal: controller.signal
@@ -58,8 +58,10 @@ export default function OfferDetails({ route, navigation }) {
                 <View>
                     <View style={styles.titleTextContainer}>
                         <AppTextBold style={globalStyles.titleText}>{offer.title}</AppTextBold>
+                        <AppTextBold style={globalStyles.text}>{offer.pay}€</AppTextBold>
                     </View>
                     <AppText style={globalStyles.text}>{offer.description}</AppText>
+
                 </View>
                 : null}
         </ScrollView>

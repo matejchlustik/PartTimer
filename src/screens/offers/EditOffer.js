@@ -1,25 +1,43 @@
-import { View, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, TextInput, TouchableWithoutFeedback, Keyboard, BackHandler } from 'react-native';
 import { Formik } from 'formik';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { StatusBar } from "expo-status-bar";
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 import AppText from '../../components/AppText';
 import { globalStyles } from '../../styles/Global';
 import Button from "../../components/Button";
-import { postOffer } from '../../api/OfferRequests';
+import { updateOffer } from '../../api/OfferRequests';
 
-export default function AddOffer({ navigation }) {
+export default function EditOffer({ navigation, route }) {
+
+    const listItem = route.params;
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                navigation.navigate("My Profile");
+                return true;
+            }
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () =>
+                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        }, [])
+    )
+
     return (
         <Formik
-            initialValues={{ title: "", description: "", pay: "", contact: "" }}
+            initialValues={{ title: listItem.title, description: listItem.description, pay: listItem.pay, contact: listItem.contact }}
             onSubmit={async (values, { setFieldError, setSubmitting }) => {
-                const data = await postOffer(values);
+                const data = await updateOffer(values, listItem._id);
                 if (data.message) {
                     setFieldError("contact", data.message);
                     setSubmitting(false);
                 } else {
                     console.log(data);
-                    navigation.navigate("HomeStack");
+                    navigation.navigate("My Profile");
                 }
             }}
             validate={values => {
