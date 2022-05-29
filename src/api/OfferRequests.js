@@ -63,3 +63,25 @@ export const updateOffer = async (values, id) => {
         return error;
     }
 }
+
+export const deleteOffer = async (id) => {
+    const token = await SecureStore.getItemAsync("token");
+
+    try {
+        const res = await fetch(`http:/192.168.1.17:8000/api/offers/${id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer, ${token}`
+                }
+            });
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data.message);
+        }
+        return data;
+    } catch (error) {
+        return error;
+    }
+}
