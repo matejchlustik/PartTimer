@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, BackHandler } from 'react-native'
+import { View, StyleSheet, ScrollView, BackHandler, ActivityIndicator } from 'react-native'
 import { StatusBar } from "expo-status-bar";
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -17,7 +17,7 @@ export default function OfferDetails({ route, navigation }) {
         const controller = new AbortController();
         async function fetchOffer() {
             try {
-                const res = await fetch(`http:/192.168.1.17:8000/api/offers/${id}`,
+                const res = await fetch(`https://api-part-timer.herokuapp.com/api/offers/${id}`,
                     {
                         method: "GET",
                         signal: controller.signal
@@ -36,6 +36,7 @@ export default function OfferDetails({ route, navigation }) {
 
     useFocusEffect(
         useCallback(() => {
+            navigation.closeDrawer();
             const onBackPress = () => {
                 if (fromMyProfile) {
                     navigation.navigate("My Profile", { fromOfferDetails: true });
@@ -52,32 +53,36 @@ export default function OfferDetails({ route, navigation }) {
     )
 
     return (
-        <ScrollView style={globalStyles.container}>
+        <View style={[offer ? globalStyles.container : styles.loadingContainer]}>
             <StatusBar style="light" />
             {offer ?
-                <View>
-                    <View style={styles.titleTextContainer}>
-                        <AppTextBold style={globalStyles.titleText}>{offer.title}</AppTextBold>
-                        <AppTextBold style={globalStyles.text}>{offer.pay}€</AppTextBold>
+                <ScrollView>
+                    <View>
+                        <View style={styles.titleTextContainer}>
+                            <AppTextBold style={globalStyles.titleText}>{offer.title}</AppTextBold>
+                            <AppText style={globalStyles.text}>{offer.pay}€</AppText>
+                        </View>
+                        <AppText style={globalStyles.text}>{offer.description}</AppText>
                     </View>
-                    <AppText style={globalStyles.text}>{offer.description}</AppText>
-
-                </View>
-                : null}
-        </ScrollView>
+                </ScrollView>
+                :
+                <ActivityIndicator size="large" color="#172b6b" />
+            }
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#ffea63",
-        padding: 18,
-    },
     titleTextContainer: {
         paddingBottom: 8,
         marginBottom: 20,
         borderBottomWidth: 1,
         borderBottomColor: "#172b6b"
+    },
+    loadingContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#feda47",
     }
 })

@@ -1,10 +1,8 @@
-import { View, StyleSheet, FlatList, TouchableHighlight, BackHandler } from 'react-native'
+import { View, StyleSheet, FlatList, TouchableHighlight, BackHandler, RefreshControl, ActivityIndicator } from 'react-native'
 import { StatusBar } from "expo-status-bar";
 import { useIsFocused } from '@react-navigation/native'
 import { useFocusEffect } from '@react-navigation/native';
-import { useCallback, useRef, useEffect } from 'react';
-import ContentLoader from "react-native-easy-content-loader";
-
+import { useCallback, useRef, useEffect, useState } from 'react';
 
 import AppText from '../../components/AppText';
 import { globalStyles } from '../../styles/Global'
@@ -13,18 +11,28 @@ import OfferCard from '../../components/OfferCard';
 import AppTextBold from '../../components/AppTextBold';
 import DotMenu from '../../components/DotMenu';
 
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 export default function MyProfile({ route, navigation }) {
     // TODO: figure out what to do if errors
-    // TODO: if offer is added or edited make this refresh or refetch or whatever
 
-    const { data: offers, setData: setOffers, isPending: offersPending, error: offersError } = useFetch("http:/192.168.1.17:8000/api/offers/me");
-    const { data: user, isPending: userPending, error: userError } = useFetch("http:/192.168.1.17:8000/api/users/me");
+    const { data: offers, setData: setOffers, isPending: offersPending, error: offersError, refetch } = useFetch("https://api-part-timer.herokuapp.com/api/offers/me");
+    const { data: user, isPending: userPending, error: userError } = useFetch("https://api-part-timer.herokuapp.com/api/users/me");
+    const [refreshing, setRefreshing] = useState(false);
 
     const flatListRef = useRef();
 
     const isFocused = useIsFocused()
 
     const { fromOfferDetails } = route.params;
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        refetch({});
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
 
     useEffect(() => {
         if (!fromOfferDetails && flatListRef.current) {
@@ -34,6 +42,7 @@ export default function MyProfile({ route, navigation }) {
 
     useFocusEffect(
         useCallback(() => {
+            navigation.closeDrawer();
             const onBackPress = () => {
                 navigation.navigate("Home");
                 return true;
@@ -59,37 +68,6 @@ export default function MyProfile({ route, navigation }) {
                 </View>
             </View>
             <AppTextBold style={{ ...styles.offersTitleText, ...styles.offersHeader }}>Active Offers</AppTextBold>
-        </View>
-    )
-
-    const Loader = () => (
-        <View style={{ backgroundColor: "#feda47", flex: 1 }}>
-            {isFocused ?
-                <StatusBar style="dark" />
-                : null}
-            <View style={{ padding: 18, paddingHorizontal: 8 }}>
-                <ContentLoader
-                    containerStyles={styles.userInnerContainer}
-                    titleStyles={{ height: 25, marginVertical: 8, }}
-                    primaryColor='#172b6b'
-                    pRows={1}
-                    pWidth={["75%"]}
-                />
-            </View>
-            <View style={{ backgroundColor: "#333", flex: 1, paddingHorizontal: 8 }}>
-                <ContentLoader
-                    containerStyles={{ marginVertical: 18 }}
-                    titleStyles={{ height: 25, width: "75%", marginVertical: 10, }}
-                    primaryColor='#DCDCDC'
-                    pRows={0}
-                />
-                <ContentLoader
-                    containerStyles={{ marginVertical: 8 }}
-                    primaryColor='#DCDCDC'
-                    pRows={2}
-                    listSize={5}
-                />
-            </View>
         </View>
     )
 
@@ -126,10 +104,22 @@ export default function MyProfile({ route, navigation }) {
                         </TouchableHighlight>
                     )}
                     keyExtractor={item => item._id}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
                 />
             </View>
         </View>
-        : <Loader />)
+        :
+        <View style={styles.loadingContainer}>
+            {isFocused ?
+                <StatusBar style="dark" />
+                : null}
+            <ActivityIndicator size="large" color="#172b6b" />
+        </View>)
 }
 
 const styles = StyleSheet.create({
@@ -169,6 +159,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-end",
+    },
+    loadingContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#feda47",
     }
 
 })

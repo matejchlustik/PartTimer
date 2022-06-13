@@ -5,6 +5,7 @@ const useFetch = (url, ...args) => {
     const [data, setData] = useState(null);
     const [isPending, setIsPending] = useState(true);
     const [error, setError] = useState(null);
+    const [shouldRefetch, refetch] = useState({});
 
     useEffect(() => {
         const controller = new AbortController();
@@ -34,9 +35,9 @@ const useFetch = (url, ...args) => {
         }
         fetchData();
         return () => controller.abort();
-    }, [url])
+    }, [url, shouldRefetch])
 
-    return { data, isPending, error, setData }
+    return { data, isPending, error, setData, refetch }
 }
 
 export default useFetch;

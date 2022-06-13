@@ -1,7 +1,7 @@
 export const registerUser = async values => {
 
     try {
-        const res = await fetch(`http:/192.168.1.17:8000/api/users`,
+        const res = await fetch(`https://api-part-timer.herokuapp.com/api/users`,
             {
                 method: "POST",
                 body: JSON.stringify(values),
@@ -20,7 +20,7 @@ export const registerUser = async values => {
 export const loginUser = async values => {
 
     try {
-        const res = await fetch(`http:/192.168.1.17:8000/api/users/login`,
+        const res = await fetch(`https://api-part-timer.herokuapp.com/api/users/login`,
             {
                 method: "POST",
                 body: JSON.stringify(values),

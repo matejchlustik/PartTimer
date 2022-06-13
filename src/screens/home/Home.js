@@ -1,7 +1,8 @@
 import { View, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native'
 import { SearchBar } from 'react-native-elements'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { StatusBar } from "expo-status-bar";
+import { useFocusEffect } from '@react-navigation/native';
 
 import { getSearchOffers } from '../../api/OfferRequests';
 import AppText from '../../components/AppText';
@@ -14,6 +15,12 @@ export default function Home({ navigation }) {
     const [searchOffers, setSearchOffers] = useState();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchTimer, setSearchTimer] = useState(null);
+
+    useFocusEffect(
+        useCallback(() => {
+            navigation.closeDrawer();
+        }, [])
+    )
 
     const fetchOffers = async value => {
         const data = await getSearchOffers(value);

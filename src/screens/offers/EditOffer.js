@@ -16,6 +16,7 @@ export default function EditOffer({ navigation, route }) {
 
     useFocusEffect(
         useCallback(() => {
+            navigation.closeDrawer();
             const onBackPress = () => {
                 navigation.navigate("My Profile");
                 return true;

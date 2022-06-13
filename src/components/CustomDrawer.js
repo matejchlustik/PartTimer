@@ -1,8 +1,9 @@
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
-import { View, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native'
+import { View, StyleSheet, TouchableHighlight } from 'react-native'
 import { useContext } from 'react'
 import * as SecureStore from 'expo-secure-store';
 import { CommonActions } from '@react-navigation/native';
+import { Entypo } from '@expo/vector-icons';
 
 import AppText from './AppText'
 import { UserContext } from "../contexts/UserContext"
@@ -28,13 +29,15 @@ export default function CustomDrawer(props) {
             <View style={styles.bottomBar}>
                 {user ?
                     <TouchableHighlight style={styles.bottomBarTouchOpacity} onPress={userOnPress} underlayColor={"#222"}>
-                        <View>
-                            <AppText style={styles.bottomBarText}>Sign out</AppText>
+                        <View style={styles.bottomBarContainer}>
+                            <Entypo name="login" size={24} color="#fff" style={styles.bottomBarIcon} />
+                            <AppText style={styles.bottomBarText}>Log out</AppText>
                         </View>
                     </TouchableHighlight>
                     :
                     <TouchableHighlight style={styles.bottomBarTouchOpacity} onPress={nonUserOnPress} underlayColor={"#222"}>
-                        <View>
+                        <View style={styles.bottomBarContainer}>
+                            <Entypo name="log-out" size={24} color="#fff" style={styles.bottomBarIcon} />
                             <AppText style={styles.bottomBarText}>Log in</AppText>
                         </View>
                     </TouchableHighlight>
@@ -68,5 +71,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 6,
         margin: 10,
         borderRadius: 4
+    },
+    bottomBarContainer: {
+        display: "flex",
+        flexDirection: "row"
+    },
+    bottomBarIcon: {
+        marginRight: 32
     }
 })

@@ -1,9 +1,10 @@
 import { View, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Formik } from 'formik';
-import { useContext } from 'react';
+import { useContext, useCallback } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { StatusBar } from "expo-status-bar";
+import { useFocusEffect } from '@react-navigation/native';
 
 import AppText from '../../components/AppText';
 import { globalStyles } from '../../styles/Global';
@@ -11,9 +12,15 @@ import Button from "../../components/Button";
 import { registerUser } from '../../api/AuthRequests';
 import { UserContext } from '../../contexts/UserContext';
 
-export default function Register() {
+export default function Register({ navigation }) {
 
     const { setUser } = useContext(UserContext);
+
+    useFocusEffect(
+        useCallback(() => {
+            navigation.closeDrawer();
+        }, [])
+    )
 
     return (
         <Formik

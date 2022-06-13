@@ -2,6 +2,8 @@ import { View, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-nativ
 import { Formik } from 'formik';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { StatusBar } from "expo-status-bar";
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 import AppText from '../../components/AppText';
 import { globalStyles } from '../../styles/Global';
@@ -9,6 +11,13 @@ import Button from "../../components/Button";
 import { postOffer } from '../../api/OfferRequests';
 
 export default function AddOffer({ navigation }) {
+
+    useFocusEffect(
+        useCallback(() => {
+            navigation.closeDrawer();
+        }, [])
+    )
+
     return (
         <Formik
             initialValues={{ title: "", description: "", pay: "", contact: "" }}

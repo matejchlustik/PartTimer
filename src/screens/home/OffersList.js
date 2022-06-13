@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { View, FlatList, StyleSheet, TouchableHighlight } from 'react-native'
 import { StatusBar } from "expo-status-bar";
+import { useFocusEffect } from '@react-navigation/native';
 
 import { getSearchOffers } from '../../api/OfferRequests';
 import AppText from '../../components/AppText';
+import AppTextBold from '../../components/AppTextBold';
 import OfferCard from '../../components/OfferCard';
 import { globalStyles } from '../../styles/Global'
 
@@ -11,6 +13,12 @@ export default function OffersList({ route, navigation }) {
 
     const [offers, setOffers] = useState();
     const { searchQuery } = route.params;
+
+    useFocusEffect(
+        useCallback(() => {
+            navigation.closeDrawer();
+        }, [])
+    )
 
     useEffect(() => {
         const controller = new AbortController();
@@ -32,10 +40,10 @@ export default function OffersList({ route, navigation }) {
         <TouchableHighlight underlayColor={"#e6d260"} onPress={() => navigation.navigate("OfferDetails", { id: item._id })} activeOpacity={0.4}>
             <OfferCard>
                 <View style={styles.offersTitleContainer}>
-                    <AppText style={styles.offersTitleText}>{item.title}</AppText>
+                    <AppTextBold style={styles.offersTitleText}>{item.title}</AppTextBold>
                     <AppText style={globalStyles.text}>{item.pay}$</AppText>
                 </View>
-                <AppText style={globalStyles.text}>{item.description.substring(0, 30)}</AppText>
+                <AppText style={globalStyles.text}>{item.description.substring(0, 70)}</AppText>
             </OfferCard>
         </TouchableHighlight>
     )
@@ -60,8 +68,8 @@ const styles = StyleSheet.create({
     },
     offersTitleText: {
         fontSize: 18,
-        fontWeight: "bold",
         color: "#172b6b",
+        flexBasis: "75%"
     },
     offersTitleContainer: {
         flexDirection: "row",
