@@ -8,6 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import { useFocusEffect } from '@react-navigation/native';
 
 import AppText from '../../components/AppText'
+import AppTextBold from '../../components/AppTextBold';
 import { globalStyles } from '../../styles/Global'
 import Button from "../../components/Button";
 import { loginUser } from '../../api/AuthRequests';
@@ -15,6 +16,7 @@ import { loginUser } from '../../api/AuthRequests';
 export default function Login({ navigation }) {
 
     const { setUser } = useContext(UserContext);
+
 
     useFocusEffect(
         useCallback(() => {
@@ -26,7 +28,7 @@ export default function Login({ navigation }) {
         <Formik
             initialValues={{ email: "", password: "" }}
             onSubmit={async (values, { setFieldError, setSubmitting }) => {
-                data = await loginUser(values);
+                const data = await loginUser(values);
                 console.log(data);
                 if (data.message) {
                     setFieldError("password", data.message);
@@ -56,26 +58,31 @@ export default function Login({ navigation }) {
                     <StatusBar style="light" />
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View >
-                            <AppText style={globalStyles.formLabel}>Email</AppText>
+                            <AppTextBold style={globalStyles.formLabel}>Email</AppTextBold>
                             <TextInput
                                 style={globalStyles.input}
                                 onChangeText={handleChange("email")}
                                 onBlur={handleBlur('email')}
                                 value={values.email}
                                 keyboardType={'email-address'}
+                                textContentType="emailAddress"
+                                autoComplete="email"
                             />
-                            <AppText style={globalStyles.formErrorText}>{touched.email && errors.email}</AppText>
-                            <AppText style={globalStyles.formLabel}>Password</AppText>
+                            <AppTextBold style={globalStyles.formErrorText}>{touched.email && errors.email}</AppTextBold>
+                            <AppTextBold style={globalStyles.formLabel}>Password</AppTextBold>
                             <TextInput
                                 style={globalStyles.input}
                                 onChangeText={handleChange('password')}
                                 onBlur={handleBlur('password')}
                                 value={values.password}
                                 secureTextEntry={true}
+                                textContentType="password"
                             />
-                            <AppText style={globalStyles.formErrorText}>{touched.password && errors.password}</AppText>
+                            <AppTextBold style={globalStyles.formErrorText}>{touched.password && errors.password}</AppTextBold>
                             <Button onPress={handleSubmit} text="Log in" />
+                            <AppTextBold style={{ ...globalStyles.text, textAlign: "center", alignSelf: "center", marginVertical: 20 }}>Don't have an account yet? Click the button below</AppTextBold>
                             <Button onPress={() => navigation.navigate("Register")} text="Register" />
+
                         </View>
                     </TouchableWithoutFeedback>
                 </KeyboardAwareScrollView>

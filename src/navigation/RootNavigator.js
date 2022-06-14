@@ -84,7 +84,8 @@ export default function RootNavigator({ onAppReady }) {
                                     options={{
                                         drawerIcon: ({ focused }) => (
                                             <Ionicons name="add-circle" size={24} color={focused ? '#172b6b' : '#fff'} />
-                                        )
+                                        ),
+                                        unmountOnBlur: true,
                                     }} />
                                 <Drawer.Screen
                                     name={"My Profile"}

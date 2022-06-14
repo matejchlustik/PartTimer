@@ -20,7 +20,6 @@ export const globalStyles = StyleSheet.create({
     },
     formLabel: {
         fontSize: 20,
-        fontWeight: "bold",
         color: "#172b6b",
     },
     formContainer: {
@@ -33,7 +32,6 @@ export const globalStyles = StyleSheet.create({
         fontSize: 14,
         height: 30,
         color: "#ed2121",
-        fontWeight: "bold"
     },
     text: {
         fontSize: 16,

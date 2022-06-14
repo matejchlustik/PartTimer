@@ -7,6 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { useFocusEffect } from '@react-navigation/native';
 
 import AppText from '../../components/AppText';
+import AppTextBold from '../../components/AppTextBold';
 import { globalStyles } from '../../styles/Global';
 import Button from "../../components/Button";
 import { registerUser } from '../../api/AuthRequests';
@@ -64,41 +65,49 @@ export default function Register({ navigation }) {
                     <StatusBar style="light" />
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View>
-                            <AppText style={globalStyles.formLabel}>Username</AppText>
+                            <AppTextBold style={globalStyles.formLabel}>Username</AppTextBold>
                             <TextInput
                                 style={globalStyles.input}
                                 onChangeText={handleChange('username')}
                                 onBlur={handleBlur('username')}
                                 value={values.username}
+                                textContentType="username"
+                                autoComplete="username"
                             />
-                            <AppText style={globalStyles.formErrorText}>{touched.username && errors.username}</AppText>
-                            <AppText style={globalStyles.formLabel}>Email</AppText>
+                            <AppTextBold style={globalStyles.formErrorText}>{touched.username && errors.username}</AppTextBold>
+                            <AppTextBold style={globalStyles.formLabel}>Email</AppTextBold>
                             <TextInput
                                 style={globalStyles.input}
                                 onChangeText={handleChange("email")}
                                 onBlur={handleBlur('email')}
                                 value={values.email}
                                 keyboardType={'email-address'}
+                                textContentType="emailAddress"
+                                autoComplete="email"
                             />
-                            <AppText style={globalStyles.formErrorText}>{touched.email && errors.email}</AppText>
-                            <AppText style={globalStyles.formLabel}>Password</AppText>
+                            <AppTextBold style={globalStyles.formErrorText}>{touched.email && errors.email}</AppTextBold>
+                            <AppTextBold style={globalStyles.formLabel}>Password</AppTextBold>
                             <TextInput
                                 style={globalStyles.input}
                                 onChangeText={handleChange('password')}
                                 onBlur={handleBlur('password')}
                                 value={values.password}
                                 secureTextEntry={true}
+                                textContentType="newPassword"
+                                autoComplete="password-new"
                             />
-                            <AppText style={globalStyles.formErrorText}>{touched.password && errors.password}</AppText>
-                            <AppText style={globalStyles.formLabel}>Confirm password</AppText>
+                            <AppTextBold style={globalStyles.formErrorText}>{touched.password && errors.password}</AppTextBold>
+                            <AppTextBold style={globalStyles.formLabel}>Confirm password</AppTextBold>
                             <TextInput
                                 style={globalStyles.input}
                                 onChangeText={handleChange('confirmPassword')}
                                 onBlur={handleBlur('confirmPassword')}
                                 value={values.confirmPassword}
                                 secureTextEntry={true}
+                                textContentType="newPassword"
+                                autoComplete="password-new"
                             />
-                            <AppText style={globalStyles.formErrorText}>{touched.confirmPassword && errors.confirmPassword}</AppText>
+                            <AppTextBold style={globalStyles.formErrorText}>{touched.confirmPassword && errors.confirmPassword}</AppTextBold>
                             <Button onPress={handleSubmit} text="Register" />
                         </View>
                     </TouchableWithoutFeedback>

@@ -71,6 +71,7 @@ export default function MyProfile({ route, navigation }) {
         </View>
     )
 
+    // this should also call the api, for now it is in DotMenu component
     const removeOffer = (offerID) => {
         setOffers(offers.filter(e => e._id !== offerID));
     }
