@@ -5,7 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 
-import AppText from '../../components/AppText';
+import AppTextBold from '../../components/AppTextBold';
 import { globalStyles } from '../../styles/Global';
 import Button from "../../components/Button";
 import { updateOffer } from '../../api/OfferRequests';
@@ -67,44 +67,40 @@ export default function EditOffer({ navigation, route }) {
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                 <KeyboardAwareScrollView style={globalStyles.formContainer} keyboardShouldPersistTaps={'handled'}>
                     <StatusBar style="light" />
-                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                        <View>
-                            <AppText style={globalStyles.formLabel}>Title</AppText>
-                            <TextInput
-                                style={globalStyles.input}
-                                onChangeText={handleChange("title")}
-                                onBlur={handleBlur('title')}
-                                value={values.title}
-                            />
-                            <AppText style={globalStyles.formErrorText}>{touched.title && errors.title}</AppText>
-                            <AppText style={globalStyles.formLabel}>Description</AppText>
-                            <TextInput
-                                style={{ ...globalStyles.input, height: 150, textAlignVertical: "top" }}
-                                onChangeText={handleChange('description')}
-                                onBlur={handleBlur('description')}
-                                multiline
-                                value={values.description}
-                            />
-                            <AppText style={globalStyles.formErrorText}>{touched.description && errors.description}</AppText>
-                            <AppText style={globalStyles.formLabel}>Pay</AppText>
-                            <TextInput
-                                style={globalStyles.input}
-                                onChangeText={handleChange('pay')}
-                                onBlur={handleBlur('pay')}
-                                value={values.pay}
-                            />
-                            <AppText style={globalStyles.formErrorText}>{touched.pay && errors.pay}</AppText>
-                            <AppText style={globalStyles.formLabel}>Contact</AppText>
-                            <TextInput
-                                style={globalStyles.input}
-                                onChangeText={handleChange('contact')}
-                                onBlur={handleBlur('contact')}
-                                value={values.contact}
-                            />
-                            <AppText style={globalStyles.formErrorText}>{touched.contact && errors.contact}</AppText>
-                            <Button onPress={handleSubmit} text="Submit" />
-                        </View>
-                    </TouchableWithoutFeedback>
+                    <AppTextBold style={globalStyles.formLabel}>Title</AppTextBold>
+                    <TextInput
+                        style={globalStyles.input}
+                        onChangeText={handleChange("title")}
+                        onBlur={handleBlur('title')}
+                        value={values.title}
+                    />
+                    <AppTextBold style={globalStyles.formErrorText}>{touched.title && errors.title}</AppTextBold>
+                    <AppTextBold style={globalStyles.formLabel}>Description</AppTextBold>
+                    <TextInput
+                        style={{ ...globalStyles.input, height: 150, textAlignVertical: "top" }}
+                        onChangeText={handleChange('description')}
+                        onBlur={handleBlur('description')}
+                        multiline
+                        value={values.description}
+                    />
+                    <AppTextBold style={globalStyles.formErrorText}>{touched.description && errors.description}</AppTextBold>
+                    <AppTextBold style={globalStyles.formLabel}>Pay</AppTextBold>
+                    <TextInput
+                        style={globalStyles.input}
+                        onChangeText={handleChange('pay')}
+                        onBlur={handleBlur('pay')}
+                        value={values.pay}
+                    />
+                    <AppTextBold style={globalStyles.formErrorText}>{touched.pay && errors.pay}</AppTextBold>
+                    <AppTextBold style={globalStyles.formLabel}>Contact</AppTextBold>
+                    <TextInput
+                        style={globalStyles.input}
+                        onChangeText={handleChange('contact')}
+                        onBlur={handleBlur('contact')}
+                        value={values.contact}
+                    />
+                    <AppTextBold style={globalStyles.formErrorText}>{touched.contact && errors.contact}</AppTextBold>
+                    <Button onPress={handleSubmit} text="Submit" />
                 </KeyboardAwareScrollView>
             )}
         </Formik>

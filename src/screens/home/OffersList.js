@@ -1,40 +1,24 @@
-import { useEffect, useState, useCallback } from 'react'
-import { View, FlatList, StyleSheet, TouchableHighlight } from 'react-native'
+import { useCallback } from 'react'
+import { View, FlatList, StyleSheet, TouchableHighlight, ActivityIndicator } from 'react-native'
 import { StatusBar } from "expo-status-bar";
 import { useFocusEffect } from '@react-navigation/native';
 
-import { getSearchOffers } from '../../api/OfferRequests';
 import AppText from '../../components/AppText';
 import AppTextBold from '../../components/AppTextBold';
 import OfferCard from '../../components/OfferCard';
-import { globalStyles } from '../../styles/Global'
+import { globalStyles } from '../../styles/Global';
+import useFetch from '../../hooks/useFetch';
 
 export default function OffersList({ route, navigation }) {
 
-    const [offers, setOffers] = useState();
     const { searchQuery } = route.params;
+    const { data: offers, isPending: offersPending, error: offersError, refetch } = useFetch(`https://api-part-timer.herokuapp.com/api/offers/search/${searchQuery}`);
 
     useFocusEffect(
         useCallback(() => {
             navigation.closeDrawer();
         }, [])
     )
-
-    useEffect(() => {
-        const controller = new AbortController();
-        async function fetchOffers() {
-            const data = await getSearchOffers(searchQuery);
-            if (data.message) {
-                console.log(data.message, "OffersListScreen 11-24");
-                setOffers(null);
-            } else {
-                setOffers(data);
-            }
-        }
-        fetchOffers();
-        return () => controller.abort();
-    }, [searchQuery])
-
 
     const renderItem = ({ item }) => (
         <TouchableHighlight underlayColor={"#e6d260"} onPress={() => navigation.navigate("OfferDetails", { id: item._id })} activeOpacity={0.4}>
@@ -51,12 +35,22 @@ export default function OffersList({ route, navigation }) {
     return (
         <View style={styles.offersContainer}>
             <StatusBar style="light" />
-            {offers ?
+            {!offersPending && !offersError ?
                 <FlatList
                     data={offers}
                     renderItem={renderItem}
                     keyExtractor={item => item._id} />
-                : null}
+                :
+                offersError ?
+                    <TouchableWithoutFeedback onPress={() => { refetch({}); }} >
+                        <View style={globalStyles.loadingContainer}>
+                            <AppTextBold style={globalStyles.text}>Something went wrong please tap anywhere to try again</AppTextBold>
+                        </View>
+                    </TouchableWithoutFeedback>
+                    :
+                    <View style={globalStyles.loadingContainer}>
+                        <ActivityIndicator size="large" color="#172b6b" />
+                    </View>}
         </View>
     )
 }
@@ -76,6 +70,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "flex-end",
         marginVertical: 10
-    }
+    },
+
 })
 

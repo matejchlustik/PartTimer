@@ -1,4 +1,4 @@
-import { View, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native'
+import { View, StyleSheet, FlatList, TouchableOpacity, Button, TextInput, ScrollView } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 import { useState, useCallback } from 'react'
 import { StatusBar } from "expo-status-bar";
@@ -8,7 +8,6 @@ import { getSearchOffers } from '../../api/OfferRequests';
 import AppText from '../../components/AppText';
 import { globalStyles } from '../../styles/Global'
 import AppTextBold from '../../components/AppTextBold';
-
 
 export default function Home({ navigation }) {
 

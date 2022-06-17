@@ -17,6 +17,7 @@ export const globalStyles = StyleSheet.create({
         height: 48,
         marginBottom: 10,
         marginTop: 6,
+        height: 50
     },
     formLabel: {
         fontSize: 20,
@@ -30,8 +31,7 @@ export const globalStyles = StyleSheet.create({
     },
     formErrorText: {
         fontSize: 14,
-        height: 30,
-        color: "#ed2121",
+        color: "#ed2121"
     },
     text: {
         fontSize: 16,
@@ -41,4 +41,10 @@ export const globalStyles = StyleSheet.create({
         fontSize: 24,
         color: "#172b6b"
     },
+    loadingContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#feda47",
+    }
 });

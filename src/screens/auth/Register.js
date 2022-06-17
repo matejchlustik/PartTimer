@@ -6,7 +6,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { StatusBar } from "expo-status-bar";
 import { useFocusEffect } from '@react-navigation/native';
 
-import AppText from '../../components/AppText';
 import AppTextBold from '../../components/AppTextBold';
 import { globalStyles } from '../../styles/Global';
 import Button from "../../components/Button";
@@ -61,56 +60,52 @@ export default function Register({ navigation }) {
             }}
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                <KeyboardAwareScrollView style={globalStyles.formContainer} keyboardShouldPersistTaps={'handled'}>
+                <KeyboardAwareScrollView style={globalStyles.formContainer} keyboardShouldPersistTaps={'handled'} >
                     <StatusBar style="light" />
-                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                        <View>
-                            <AppTextBold style={globalStyles.formLabel}>Username</AppTextBold>
-                            <TextInput
-                                style={globalStyles.input}
-                                onChangeText={handleChange('username')}
-                                onBlur={handleBlur('username')}
-                                value={values.username}
-                                textContentType="username"
-                                autoComplete="username"
-                            />
-                            <AppTextBold style={globalStyles.formErrorText}>{touched.username && errors.username}</AppTextBold>
-                            <AppTextBold style={globalStyles.formLabel}>Email</AppTextBold>
-                            <TextInput
-                                style={globalStyles.input}
-                                onChangeText={handleChange("email")}
-                                onBlur={handleBlur('email')}
-                                value={values.email}
-                                keyboardType={'email-address'}
-                                textContentType="emailAddress"
-                                autoComplete="email"
-                            />
-                            <AppTextBold style={globalStyles.formErrorText}>{touched.email && errors.email}</AppTextBold>
-                            <AppTextBold style={globalStyles.formLabel}>Password</AppTextBold>
-                            <TextInput
-                                style={globalStyles.input}
-                                onChangeText={handleChange('password')}
-                                onBlur={handleBlur('password')}
-                                value={values.password}
-                                secureTextEntry={true}
-                                textContentType="newPassword"
-                                autoComplete="password-new"
-                            />
-                            <AppTextBold style={globalStyles.formErrorText}>{touched.password && errors.password}</AppTextBold>
-                            <AppTextBold style={globalStyles.formLabel}>Confirm password</AppTextBold>
-                            <TextInput
-                                style={globalStyles.input}
-                                onChangeText={handleChange('confirmPassword')}
-                                onBlur={handleBlur('confirmPassword')}
-                                value={values.confirmPassword}
-                                secureTextEntry={true}
-                                textContentType="newPassword"
-                                autoComplete="password-new"
-                            />
-                            <AppTextBold style={globalStyles.formErrorText}>{touched.confirmPassword && errors.confirmPassword}</AppTextBold>
-                            <Button onPress={handleSubmit} text="Register" />
-                        </View>
-                    </TouchableWithoutFeedback>
+                    <AppTextBold style={globalStyles.formLabel}>Username</AppTextBold>
+                    <TextInput
+                        style={globalStyles.input}
+                        onChangeText={handleChange('username')}
+                        onBlur={handleBlur('username')}
+                        value={values.username}
+                        textContentType="username"
+                        autoComplete="username"
+                    />
+                    <AppTextBold style={globalStyles.formErrorText}>{touched.username && errors.username}</AppTextBold>
+                    <AppTextBold style={globalStyles.formLabel}>Email</AppTextBold>
+                    <TextInput
+                        style={globalStyles.input}
+                        onChangeText={handleChange("email")}
+                        onBlur={handleBlur('email')}
+                        value={values.email}
+                        keyboardType={'email-address'}
+                        textContentType="emailAddress"
+                        autoComplete="email"
+                    />
+                    <AppTextBold style={globalStyles.formErrorText}>{touched.email && errors.email}</AppTextBold>
+                    <AppTextBold style={globalStyles.formLabel}>Password</AppTextBold>
+                    <TextInput
+                        style={globalStyles.input}
+                        onChangeText={handleChange('password')}
+                        onBlur={handleBlur('password')}
+                        value={values.password}
+                        secureTextEntry={true}
+                        textContentType="newPassword"
+                        autoComplete="password-new"
+                    />
+                    <AppTextBold style={globalStyles.formErrorText}>{touched.password && errors.password}</AppTextBold>
+                    <AppTextBold style={globalStyles.formLabel}>Confirm password</AppTextBold>
+                    <TextInput
+                        style={globalStyles.input}
+                        onChangeText={handleChange('confirmPassword')}
+                        onBlur={handleBlur('confirmPassword')}
+                        value={values.confirmPassword}
+                        secureTextEntry={true}
+                        textContentType="newPassword"
+                        autoComplete="password-new"
+                    />
+                    <AppTextBold style={globalStyles.formErrorText}>{touched.confirmPassword && errors.confirmPassword}</AppTextBold>
+                    <Button onPress={handleSubmit} text="Register" />
                 </KeyboardAwareScrollView>
             )
             }

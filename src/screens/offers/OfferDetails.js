@@ -1,38 +1,18 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { View, StyleSheet, ScrollView, BackHandler, ActivityIndicator } from 'react-native'
 import { StatusBar } from "expo-status-bar";
 import { useFocusEffect } from '@react-navigation/native';
 
 import AppText from '../../components/AppText';
 import AppTextBold from '../../components/AppTextBold';
-import { globalStyles } from '../../styles/Global'
+import { globalStyles } from '../../styles/Global';
+import useFetch from '../../hooks/useFetch';
 
 export default function OfferDetails({ route, navigation }) {
 
     const { id, fromMyProfile } = route.params;
 
-    const [offer, setOffer] = useState();
-
-    useEffect(() => {
-        const controller = new AbortController();
-        async function fetchOffer() {
-            try {
-                const res = await fetch(`https://api-part-timer.herokuapp.com/api/offers/${id}`,
-                    {
-                        method: "GET",
-                        signal: controller.signal
-                    });
-                if (!res.ok) {
-                    throw new Error("Failed to fetch the data");
-                }
-                setOffer(await res.json());
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchOffer();
-        return () => controller.abort();
-    }, [id])
+    const { data: offer, isPending: offerPending, error: offerError, refetch } = useFetch(`https://api-part-timer.herokuapp.com/api/offers/${id}`);
 
     useFocusEffect(
         useCallback(() => {
@@ -53,9 +33,9 @@ export default function OfferDetails({ route, navigation }) {
     )
 
     return (
-        <View style={[offer ? globalStyles.container : styles.loadingContainer]}>
+        <View style={[offer ? globalStyles.container : globalStyles.loadingContainer]}>
             <StatusBar style="light" />
-            {offer ?
+            {!offerPending && !offerError ?
                 <ScrollView>
                     <View>
                         <View style={styles.titleTextContainer}>
@@ -66,8 +46,16 @@ export default function OfferDetails({ route, navigation }) {
                     </View>
                 </ScrollView>
                 :
-                <ActivityIndicator size="large" color="#172b6b" />
-            }
+                offerError ?
+                    <TouchableWithoutFeedback onPress={() => { refetch({}); }} >
+                        <View style={globalStyles.loadingContainer}>
+                            <AppTextBold style={globalStyles.text}>Something went wrong please tap anywhere to try again</AppTextBold>
+                        </View>
+                    </TouchableWithoutFeedback>
+                    :
+                    <View style={globalStyles.loadingContainer}>
+                        <ActivityIndicator size="large" color="#172b6b" />
+                    </View>}
         </View>
     )
 }
@@ -78,11 +66,5 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         borderBottomWidth: 1,
         borderBottomColor: "#172b6b"
-    },
-    loadingContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: "#feda47",
     }
 })

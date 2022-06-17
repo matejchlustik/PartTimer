@@ -10,7 +10,6 @@ import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
 import { UserContext } from "../contexts/UserContext"
-import TestScreen from "../screens/TestScreen";
 import MainStack from "./MainStack";
 import AuthStack from "./AuthStack";
 import CustomDrawer from "../components/CustomDrawer"
@@ -18,7 +17,6 @@ import AddOffer from "../screens/offers/AddOffer";
 import MyProfile from "../screens/profile/MyProfile";
 import EditOffer from "../screens/offers/EditOffer";
 import OfferDetails from "../screens/offers/OfferDetails";
-
 
 const Drawer = createDrawerNavigator();
 

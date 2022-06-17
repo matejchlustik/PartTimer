@@ -1,4 +1,4 @@
-import { View, StyleSheet, FlatList, TouchableHighlight, BackHandler, RefreshControl, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, FlatList, TouchableHighlight, BackHandler, RefreshControl, ActivityIndicator, TouchableWithoutFeedback } from 'react-native'
 import { StatusBar } from "expo-status-bar";
 import { useIsFocused } from '@react-navigation/native'
 import { useFocusEffect } from '@react-navigation/native';
@@ -16,10 +16,9 @@ const wait = (timeout) => {
 }
 
 export default function MyProfile({ route, navigation }) {
-    // TODO: figure out what to do if errors
 
-    const { data: offers, setData: setOffers, isPending: offersPending, error: offersError, refetch } = useFetch("https://api-part-timer.herokuapp.com/api/offers/me");
-    const { data: user, isPending: userPending, error: userError } = useFetch("https://api-part-timer.herokuapp.com/api/users/me");
+    const { data: offers, setData: setOffers, isPending: offersPending, error: offersError, refetch: offersRefetch } = useFetch("https://api-part-timer.herokuapp.com/api/offers/me");
+    const { data: user, isPending: userPending, error: userError, refetch: userRefetch } = useFetch("https://api-part-timer.herokuapp.com/api/users/me");
     const [refreshing, setRefreshing] = useState(false);
 
     const flatListRef = useRef();
@@ -30,9 +29,14 @@ export default function MyProfile({ route, navigation }) {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        refetch({});
+        offersRefetch({});
         wait(2000).then(() => setRefreshing(false));
     }, []);
+
+    // this should also call the api, for now it is in DotMenu component
+    const removeOffer = (offerID) => {
+        setOffers(offers.filter(e => e._id !== offerID));
+    }
 
     useEffect(() => {
         if (!fromOfferDetails && flatListRef.current) {
@@ -71,12 +75,7 @@ export default function MyProfile({ route, navigation }) {
         </View>
     )
 
-    // this should also call the api, for now it is in DotMenu component
-    const removeOffer = (offerID) => {
-        setOffers(offers.filter(e => e._id !== offerID));
-    }
-
-    return (!offersPending && !userPending ?
+    return (!offersPending && !userPending && !offersError && !userError ?
         <View style={{ flex: 1, backgroundColor: "#feda47" }}>
             {isFocused ?
                 <StatusBar style="dark" />
@@ -114,13 +113,22 @@ export default function MyProfile({ route, navigation }) {
                 />
             </View>
         </View>
-        :
-        <View style={styles.loadingContainer}>
-            {isFocused ?
-                <StatusBar style="dark" />
-                : null}
-            <ActivityIndicator size="large" color="#172b6b" />
-        </View>)
+        : offersError || userError ?
+            <TouchableWithoutFeedback onPress={() => { offersRefetch({}); userRefetch({}); }} >
+                <View style={globalStyles.loadingContainer}>
+                    {isFocused ?
+                        <StatusBar style="dark" />
+                        : null}
+                    <AppTextBold style={globalStyles.text}>Something went wrong please tap anywhere to try again</AppTextBold>
+                </View>
+            </TouchableWithoutFeedback>
+            :
+            <View style={globalStyles.loadingContainer}>
+                {isFocused ?
+                    <StatusBar style="dark" />
+                    : null}
+                <ActivityIndicator size="large" color="#172b6b" />
+            </View>)
 }
 
 const styles = StyleSheet.create({
@@ -161,11 +169,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "flex-end",
     },
-    loadingContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: "#feda47",
-    }
+
 
 })
