@@ -23,9 +23,10 @@ export default function App() {
                 setAppIsReady(true);
             }
         }
-
         prepare();
     }, []);
+
+
 
     const onReady = useCallback(async () => {
         if (appIsReady) {

@@ -41,6 +41,8 @@ export default function OfferDetails({ route, navigation }) {
                         <View style={styles.titleTextContainer}>
                             <AppTextBold style={globalStyles.titleText}>{offer.title}</AppTextBold>
                             <AppText style={globalStyles.text}>{offer.pay}€</AppText>
+                            <AppText style={{ ...globalStyles.titleText, fontSize: 20 }}>{offer.location}</AppText>
+                            <AppText style={globalStyles.text}>{offer.contact}</AppText>
                         </View>
                         <AppText style={globalStyles.text}>{offer.description}</AppText>
                     </View>

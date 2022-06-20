@@ -11,10 +11,6 @@ import OfferCard from '../../components/OfferCard';
 import AppTextBold from '../../components/AppTextBold';
 import DotMenu from '../../components/DotMenu';
 
-const wait = (timeout) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-}
-
 export default function MyProfile({ route, navigation }) {
 
     const { data: offers, setData: setOffers, isPending: offersPending, error: offersError, refetch: offersRefetch } = useFetch("https://api-part-timer.herokuapp.com/api/offers/me");
@@ -30,10 +26,8 @@ export default function MyProfile({ route, navigation }) {
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         offersRefetch({});
-        wait(2000).then(() => setRefreshing(false));
     }, []);
 
-    // this should also call the api, for now it is in DotMenu component
     const removeOffer = (offerID) => {
         setOffers(offers.filter(e => e._id !== offerID));
     }
@@ -43,6 +37,12 @@ export default function MyProfile({ route, navigation }) {
             flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
         }
     }, [fromOfferDetails])
+
+    useEffect(() => {
+        if (!offersPending && refreshing) {
+            setRefreshing(false);
+        }
+    }, [offersPending])
 
     useFocusEffect(
         useCallback(() => {
@@ -71,11 +71,15 @@ export default function MyProfile({ route, navigation }) {
                     <AppText style={globalStyles.text}>{user.email}</AppText>
                 </View>
             </View>
-            <AppTextBold style={{ ...styles.offersTitleText, ...styles.offersHeader }}>Active Offers</AppTextBold>
+            {offers.length !== 0 ?
+                <AppTextBold style={{ ...styles.offersTitleText, ...styles.offersHeader }}>Active Offers</AppTextBold>
+                :
+                <AppTextBold style={{ ...styles.offersTitleText, ...styles.offersHeader }}>You haven't posted any offers yet</AppTextBold>}
+
         </View>
     )
 
-    return (!offersPending && !userPending && !offersError && !userError ?
+    return ((!offersPending && !userPending && !offersError && !userError) || (offersPending && offers && !userPending) ?
         <View style={{ flex: 1, backgroundColor: "#feda47" }}>
             {isFocused ?
                 <StatusBar style="dark" />

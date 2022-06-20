@@ -30,7 +30,7 @@ export default function EditOffer({ navigation, route }) {
 
     return (
         <Formik
-            initialValues={{ title: listItem.title, description: listItem.description, pay: listItem.pay, contact: listItem.contact }}
+            initialValues={{ title: listItem.title, description: listItem.description, pay: listItem.pay, contact: listItem.contact, location: listItem.location }}
             onSubmit={async (values, { setFieldError, setSubmitting }) => {
                 const data = await updateOffer(values, listItem._id);
                 if (data.message) {
@@ -60,6 +60,9 @@ export default function EditOffer({ navigation, route }) {
                 }
                 if (!values.contact) {
                     errors.contact = "Required";
+                }
+                if (!values.location) {
+                    errors.location = "Required"
                 }
                 return errors;
             }}
@@ -100,6 +103,14 @@ export default function EditOffer({ navigation, route }) {
                         value={values.contact}
                     />
                     <AppTextBold style={globalStyles.formErrorText}>{touched.contact && errors.contact}</AppTextBold>
+                    <AppTextBold style={globalStyles.formLabel}>Location</AppTextBold>
+                    <TextInput
+                        style={globalStyles.input}
+                        onChangeText={handleChange('location')}
+                        onBlur={handleBlur('location')}
+                        value={values.location}
+                    />
+                    <AppTextBold style={globalStyles.formErrorText}>{touched.location && errors.location}</AppTextBold>
                     <Button onPress={handleSubmit} text="Submit" />
                 </KeyboardAwareScrollView>
             )}

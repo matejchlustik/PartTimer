@@ -8,6 +8,7 @@ const useFetch = (url, ...args) => {
     const [shouldRefetch, refetch] = useState({});
 
     useEffect(() => {
+        setIsPending(true);
         const controller = new AbortController();
         async function fetchData() {
             const token = await SecureStore.getItemAsync("token");
